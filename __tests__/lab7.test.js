@@ -21,7 +21,7 @@ describe('Basic user flow for Website', () => {
   // Check to make sure that all 20 <product-item> elements have data in them
   // We use .skip() here because this test has a TODO that has not been completed yet.
   // Make sure to remove the .skip after you finish the TODO. 
-  it.skip('Make sure <product-item> elements are populated', async () => {
+  it('Make sure <product-item> elements are populated', async () => {
     console.log('Checking to make sure <product-item> elements are populated...');
 
     // Start as true, if any don't have data, swap to false
@@ -38,10 +38,15 @@ describe('Basic user flow for Website', () => {
     console.log(`Checking product item 1/${prodItemsData.length}`);
 
     // Make sure the title, price, and image are populated in the JSON
-    firstValue = prodItemsData[0];
-    if (firstValue.title.length == 0) { allArePopulated = false; }
-    if (firstValue.price.length == 0) { allArePopulated = false; }
-    if (firstValue.image.length == 0) { allArePopulated = false; }
+    // firstValue = prodItemsData[0];
+    // if (firstValue.title.length == 0) { allArePopulated = false; }
+    // if (firstValue.price.length == 0) { allArePopulated = false; }
+    // if (firstValue.image.length == 0) { allArePopulated = false; }
+    for(let item of prodItemsData){
+      if (i.title.length == 0) { allArePopulated = false; }
+      if (i.price.length == 0) { allArePopulated = false; }
+      if (i.image.length == 0) { allArePopulated = false; }
+    }
 
     // Expect allArePopulated to still be true
     expect(allArePopulated).toBe(true);
@@ -57,12 +62,25 @@ describe('Basic user flow for Website', () => {
 
   // Check to make sure that when you click "Add to Cart" on the first <product-item> that
   // the button swaps to "Remove from Cart"
-  it.skip('Clicking the "Add to Cart" button should change button text', async () => {
+  it('Clicking the "Add to Cart" button should change button text', async () => {
     console.log('Checking the "Add to Cart" button...');
 
+    const prodItem = await page.$('product-item');
+
+    const shadowRoot = await prodItem.getProperty('shadowRoot');
+
+    const button = await shadowRoot.$('button');
+
+    await button.click();
+
+    const innerText = await button.getProperty('innerText');
+    const buttonText = await innerText.jsonValue();
+
+    expect(buttonText).toBe('Remove from Cart');
     /**
      **** TODO - STEP 2 **** 
      * Query a <product-item> element using puppeteer ( checkout page.$() and page.$$() in the docs )
+     * 
      * Grab the shadowRoot of that element (it's a property), then query a button from that shadowRoot.
      * Once you have the button, you can click it and check the innerText property of the button.
      * Once you have the innerText property, use innerText.jsonValue() to get the text value of it
